@@ -1,0 +1,61 @@
+notifications:
+  email: false
+git:
+  quiet: true
+  depth: false
+language: java
+jdk: openjdk11
+node_js: lts/*
+python: 3.7
+matrix:
+  include:
+    - python: 3.7
+services:
+  - xvfb
+  - docker
+addons:
+  apt:
+    update: false
+    packages:
+      - curl
+      - python3-setuptools
+      - python3-pip
+install: true
+before_install:
+  - if [ ! -f ${HOME}/.local/daggerok/bash-functions/master/main.bash ] ; then
+      mkdir -p ${HOME}/.local/daggerok/bash-functions/master ;
+      curl -s https://raw.githubusercontent.com/daggerok/bash-functions/master/main.bash > ${HOME}/.local/daggerok/bash-functions/master/main.bash ;
+    fi
+  - source ${HOME}/.local/daggerok/bash-functions/master/main.bash
+  - stop_any 80 5432 8080 6551
+  #
+  - export PATH=$HOME/.local/bin:$PATH
+  - pip3 install --user --upgrade pip
+  - pip install --user --upgrade httpie
+env:
+  global:
+    - TERM=dumb
+jobs:
+  include:
+    - stage: test
+      jdk: openjdk11
+      name: test
+      script: cd $TRAVIS_BUILD_DIR && ./mvnw
+    - stage: test
+      jdk: openjdk11
+      name: integration test
+      script:
+        - cd $TRAVIS_BUILD_DIR
+        - ./mvnw
+        - java -jar target/*.jar &
+        - wait_for 8080
+        - http :8080
+        - http :8080/hello
+        - http ":8080/not-found?name=''"
+        - stop_any 8080
+cache:
+  pip: true
+  packages: true
+  directories:
+    - ~/.local/daggerok
+    - ~/.m2
