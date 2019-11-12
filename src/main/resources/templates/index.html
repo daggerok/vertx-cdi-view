@@ -8,9 +8,9 @@
 <p>1 + 1 = [[${1 + 1}]]</p>
 <p>routingContext: <span data-th-text="${routingContext}"></span></p>
 <p>routingContext.normalisedPath(): <span data-th-text="${routingContext.normalisedPath()}"></span></p>
-<p data-th-text="${ctx.get('bar')}"></p>
-<p data-th-text="${ctx.request().params().get('param1')}"></p>
-<p data-th-text="${ctx.request().params().get('param2')}"></p>
+<p data-th-text="${routingContext.get('bar')}"></p>
+<p data-th-text="${routingContext.request().params().get('param1')}"></p>
+<p data-th-text="${routingContext.request().params().get('param2')}"></p>
 <p>context: [[${context}]]</p>
 <p>context.config: [[${context.config}]]</p>
 </body>
