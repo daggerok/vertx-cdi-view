@@ -35,13 +35,9 @@ public class Thymeleaf {
     engine = io.vertx.ext.web.templ.thymeleaf.ThymeleafTemplateEngine.create(vertx);
   }
 
-  // @Produces
-  // @Singleton
-  // private TemplateHandler handler = TemplateHandler.create(engine);
-
   @Produces
   @Singleton
-  private TemplateEngine engine(Vertx vertx) {
+  private TemplateEngine engine() {
     return engine;
   }
 
@@ -55,7 +51,6 @@ public class Thymeleaf {
                           .map(String::trim)
                           .filter(not(String::isBlank))
                           .orElse("index.html");
-    // return ctx -> engine.render(ctx, "templates/", view, res -> {
     return ctx -> engine.render(within.apply(ctx), "templates/" + view, res -> {
       if (res.failed()) ctx.fail(res.cause());
       else ctx.response().end(res.result());
