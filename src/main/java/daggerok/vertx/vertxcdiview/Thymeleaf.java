@@ -47,10 +47,10 @@ public class Thymeleaf {
                     Optional.ofNullable(mabyMap).orElse(Map.of()).entrySet().stream())
             .collect(Collectors.toMap(Map.Entry::getKey,
                                       Map.Entry::getValue));
-    String view = Optional.ofNullable(maybeView)
-                          .map(String::trim)
-                          .filter(not(String::isBlank))
-                          .orElse("index.html");
+    var view = Optional.ofNullable(maybeView)
+                       .map(String::trim)
+                       .filter(not(String::isBlank))
+                       .orElse("index.html");
     return ctx -> engine.render(within.apply(ctx), "templates/" + view, res -> {
       if (res.failed()) ctx.fail(res.cause());
       else ctx.response().end(res.result());
