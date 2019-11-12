@@ -42,8 +42,8 @@ public class Thymeleaf {
   }
 
   public Consumer<RoutingContext> render(String maybeView, Map<String, Object> mabyMap) {
-    Function<RoutingContext, Map<String, Object>> within = ctx ->
-      Stream.concat(Map.of("ctx", ctx, "context", context).entrySet().stream(),
+    Function<RoutingContext, Map<String, Object>> with = routingContext ->
+      Stream.concat(Map.of("routingContext", routingContext, "context", context).entrySet().stream(),
                     Optional.ofNullable(mabyMap).orElse(Map.of()).entrySet().stream())
             .collect(Collectors.toMap(Map.Entry::getKey,
                                       Map.Entry::getValue));
@@ -51,9 +51,9 @@ public class Thymeleaf {
                        .map(String::trim)
                        .filter(not(String::isBlank))
                        .orElse("index.html");
-    return ctx -> engine.render(within.apply(ctx), "templates/" + view, res -> {
-      if (res.failed()) ctx.fail(res.cause());
-      else ctx.response().end(res.result());
+    return routingContext -> engine.render(with.apply(routingContext), "templates/" + view, r -> {
+      if (r.failed()) routingContext.fail(r.cause());
+      else routingContext.response().end(r.result());
     });
   }
 
