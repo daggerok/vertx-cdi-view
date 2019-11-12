@@ -6,8 +6,8 @@
 </head>
 <body>
 <p>1 + 1 = [[${1 + 1}]]</p>
-<p>ctx: <span data-th-text="${ctx}"></span></p>
-<p>ctx.normalisedPath(): <span data-th-text="${ctx.normalisedPath()}"></span></p>
+<p>routingContext: <span data-th-text="${routingContext}"></span></p>
+<p>routingContext.normalisedPath(): <span data-th-text="${routingContext.normalisedPath()}"></span></p>
 <p data-th-text="${ctx.get('bar')}"></p>
 <p data-th-text="${ctx.request().params().get('param1')}"></p>
 <p data-th-text="${ctx.request().params().get('param2')}"></p>
